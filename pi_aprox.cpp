@@ -12,9 +12,8 @@ int main(void){
     double pi, error;
 
     for (int n = 1; n<= 20; ++n){
-        pi = 0.0;
         pi_aprox(n, pi, error);
-        std::cout <<"n = " << n << "\n pi = " << pi << "\n error = " << error << "\n";
+        std::cout <<"n = " << n << "\n pi = " << pi << "\n error relativo = " << error << "\n";
     }
 
     return 0;
@@ -32,8 +31,9 @@ void pi_aprox(int n, double &pi, double &error)
             1.0 / (8*k + 5) - 
             1.0 / (8*k + 6)
         );
-        pi += serie;
+        suma += serie;
     }
-    //calculo de error
+    pi = suma;
+    //calculo de error relativo
     error = fabs(1-pi/M_PI);
 }

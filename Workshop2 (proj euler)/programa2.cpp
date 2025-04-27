@@ -7,7 +7,7 @@
 int main(int argc, char **argv){
 
     long long n_given = std::stoll(argv[1]);
-    long long n_given_reduced = n_given;
+    long long n_given_reduced = n_given; // this is to reduce the n_given so its easier and faster for the system to find the prime factors
 
     for (long long i = 3; i <= std::sqrt(n_given_reduced) + 1; i += 2){
         if (n_given_reduced % i == 0){

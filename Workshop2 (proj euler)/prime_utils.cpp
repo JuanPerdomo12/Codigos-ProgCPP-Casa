@@ -5,6 +5,7 @@ bool isprime(long long n) {
     // suppose it is prime
     bool flag = true; 
 
+    // some cases
     if (n < 2) {
         return false;
     }

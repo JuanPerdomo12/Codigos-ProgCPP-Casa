@@ -26,6 +26,9 @@ int main(int argc, char **argv) {
                     << k+2 << "  "
                     << norm << " "
                     << std::endl;
+                    if (counter == n_given) {
+                        break;
+                    }
                 
             }
         }

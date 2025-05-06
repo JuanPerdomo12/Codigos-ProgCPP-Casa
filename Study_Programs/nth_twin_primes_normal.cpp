@@ -4,7 +4,7 @@
 
 // declaration
 bool is_prime(long long n);
-long long nth_twin_primes (long long n);
+long nth_twin_primes (long n);
 
 int main(int argc, char **argv) {
 
@@ -38,8 +38,8 @@ bool is_prime(long long n) {
     return flag;
 }
 
-long long nth_twin_primes(long long n) {
-    long long counter = 0;
+long nth_twin_primes(long n) {
+    long counter = 0;
     for (long k = 2; ; ++k) {
         if (is_prime(k) == true and is_prime(k+2) == true){
             counter ++;

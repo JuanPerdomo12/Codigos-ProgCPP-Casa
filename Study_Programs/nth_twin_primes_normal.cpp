@@ -39,11 +39,8 @@ bool is_prime(long long n) {
 }
 
 long nth_twin_primes(long n) {
-<<<<<<< HEAD
     long long counter = 0;
-=======
     long counter = 0;
->>>>>>> d99ece3dec85f7bb7bbcefb9dd502c0966aa29d6
     for (long k = 2; ; ++k) {
         if (is_prime(k) == true and is_prime(k+2) == true){
             counter ++;

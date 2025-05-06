@@ -4,23 +4,10 @@
 
 // declaration
 bool is_prime(long long n);
-//nth_twin_primes
-int main(int argc, char **argv) {
-    int n_given = std::stoll(argv[1]);
-    long long counter = 0;
-    
-    for (long k = 2; ; ++k) {
-        
-        if (is_prime(k) == true and is_prime(k+2) == true){
-            counter ++;
+long long nth_twin_primes (long long n);
 
-            if (counter == n_given) {
-                std::cout << "nth_twin_prime(" << n_given << ") is " "(" << k << ", " << k+2 << ")\n";
-                break;
-            }
-        }
-    }
-    return 0;
+int main(int argc, char **argv) {
+
 }
 
 
@@ -49,4 +36,18 @@ bool is_prime(long long n) {
     }
 
     return flag;
+}
+
+long long nth_twin_primes(long long n) {
+    long long counter = 0;
+    for (long k = 2; ; ++k) {
+        if (is_prime(k) == true and is_prime(k+2) == true){
+            counter ++;
+            if (counter == n) {
+                std::cout << "(" << k << ", " << k+2 << ")\n";
+                return k;
+            }
+        }
+    }
+    return 0;
 }

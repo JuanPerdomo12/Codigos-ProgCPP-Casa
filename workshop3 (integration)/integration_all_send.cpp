@@ -17,7 +17,6 @@ double richardson(double a, double b, int N, fptr f, algptr alg, int alpha);
 double f(double x);
 
 int main(void){
-    //double exact_result = 1.49028031410193;
     double exact_result = 1.56898093601156;
 
 
@@ -46,8 +45,8 @@ int main(void){
         }
     double trapezoid_result = trapezoid(-5.0, 5.0, N, f);
     double simpson_result = simpson(-5.0, 5.0, N, f);
-    double richardson_trapezoid_result = richardson(-5.0, 5.0, N, f, trapezoid, 1);
-    double richardson_simpson_result = richardson(-5.0, 5.0, N, f, simpson, 3);
+    double richardson_trapezoid_result = richardson(-5.0, 5.0, N, f, trapezoid, 2);
+    double richardson_simpson_result = richardson(-5.0, 5.0, N, f, simpson, 4);
     double error_trapezoid = std::abs(1.0 - trapezoid_result/exact_result);
     double error_simpson = std::abs(1.0 - simpson_result/exact_result);
     double error_richardson_trapezoid = std::abs(1.0 - richardson_trapezoid_result/exact_result);

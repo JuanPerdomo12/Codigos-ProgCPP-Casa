@@ -214,3 +214,38 @@ bool matrix_commute(const std::vector<double> & A, const std::vector<double> & B
     std::cout << "Matrices are commutative within epsilon = " << epsilon << "\n";
     return true;
 }
+
+bool orthogonal_matrix(const std::vector<double> & M, int nrows, int ncols,
+                       double epsilon) {
+    if (nrows != ncols) {
+        std::cerr << "Matrix must be square for orthogonality check.\n";
+        return false;
+    }
+
+    std::vector<double> MT(nrows * ncols);
+    transpose_matrix(M, nrows, ncols, MT);
+
+    std::vector<double> I_n;
+    identity_matrix(I_n, nrows);
+
+    std::vector<double> C;
+    matrix_matrix_multi(M, MT, C, nrows, ncols, nrows, ncols);
+
+    std::cout << "Matrix AAT: \n";
+    print_matrix(C, nrows, ncols);
+
+    for (int i = 0; i < nrows; ++i) {
+        for (int j = 0; j < ncols; ++j) {
+            double diff = std::abs(C[i*ncols + j] - I_n[i*ncols + j]);
+            if (diff > epsilon) {
+                std::cout << "Matrix is not orthogonal (failed at element [" 
+                          << i << "," << j << "] with difference " 
+                          << diff << ")\n";
+                return false;
+            }
+        }
+    }
+
+    std::cout << "Matrix is orthogonal within epsilon = " << epsilon << "\n";
+    return true;
+}

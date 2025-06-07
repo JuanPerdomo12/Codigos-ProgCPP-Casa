@@ -15,3 +15,7 @@ bool check_inverse(const std::vector<double> & A, const std::vector<double> & B,
 void hilbert_matrix(std::vector<double> & H, int nrows, int ncols);
 void transpose_matrix(const std::vector<double> & A, int m, int n,
                       std::vector<double> & AT);
+void matrix_power(const std::vector<double> & M, int nrows, int ncols,
+                    std::vector<double> & MM, int p);
+bool idempotent_matrix(const std::vector<double> & M, int nrows, int ncols,
+                    std::vector<double> & MM, int p, double epsilon);

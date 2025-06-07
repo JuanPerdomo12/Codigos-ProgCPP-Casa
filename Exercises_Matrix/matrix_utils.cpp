@@ -68,8 +68,8 @@ void matrix_matrix_multi(const std::vector<double> & M1, const std::vector<doubl
             }
 
 void identity_matrix(std::vector<double> & I, int nrows){
-    std::cout.setf(std::ios::scientific);
-    std::cout.precision(15);
+    //std::cout.setf(std::ios::scientific);
+    //std::cout.precision(15);
 
     I.resize(nrows*nrows, 0.0);
 
@@ -119,4 +119,59 @@ void transpose_matrix(const std::vector<double> & A, int nrows, int ncols,
       AT[jj*nrows + ii] = A[ii*ncols + jj];
     }
   }
+}
+
+void matrix_power(const std::vector<double> & M, int nrows, int ncols, std::vector<double> & MM, int p){
+    if (nrows != ncols){
+        std::cerr << "Matrix 1 must have the same columns as rows\n";
+        return ;
+    }
+
+    if (p == 0) {
+        identity_matrix(MM, nrows);
+        return;
+    }
+    if (p == 1) {
+        MM = M;
+        return;
+    }
+
+    std::vector<double> temp(nrows * ncols, 0.0);
+    std::vector<double> result = M;
+
+
+    for (int i = 1; i < p; i++){
+        matrix_matrix_multi(result, M, temp, nrows, ncols, nrows, ncols);
+        result = temp;
+    }
+    MM = result;
+}
+
+bool idempotent_matrix(const std::vector<double> & M, int nrows, int ncols, std::vector<double> & MM, int p, double epsilon){
+    if (nrows != ncols){
+        std::cerr << "Matrix 1 must have the same columns as rows\n";
+        return 1;
+    }
+
+    if (p == 1) {
+        std::cout << "All matrices are idempotent to power 1 (A¹ = A)\n";
+        return true;
+    }
+
+    matrix_power(M, nrows, ncols, MM, p);
+
+    for (int i = 0; i < nrows; ++i) {
+        for (int j = 0; j < ncols; ++j) {
+            double diff = std::abs(MM[i*ncols + j] - M[i*ncols + j]);
+            if (diff > epsilon) {
+                std::cout << "Matrix is not idempotent (failed at element [" 
+                          << i << "," << j << "] with difference " << diff << ")\n";
+                return false;
+            }
+        }
+    }
+
+    std::cout << "Matrix is idempotent to power " << p 
+              << " within epsilon = " << epsilon << "\n";
+    return true;
 }

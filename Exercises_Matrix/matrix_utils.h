@@ -19,3 +19,5 @@ void matrix_power(const std::vector<double> & M, int nrows, int ncols,
                     std::vector<double> & MM, int p);
 bool idempotent_matrix(const std::vector<double> & M, int nrows, int ncols,
                     std::vector<double> & MM, int p, double epsilon);
+bool matrix_commute(const std::vector<double> & A, const std::vector<double> & B,
+                    int Arows, int Acols, int Brows, int Bcols, double epsilon);

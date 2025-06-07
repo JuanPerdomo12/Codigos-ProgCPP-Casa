@@ -85,19 +85,29 @@ void identity_matrix(std::vector<double> & I, int nrows){
 bool check_inverse(const std::vector<double> & A, const std::vector<double> & B, const std::vector<double> & I_n, double epsilon, int n){
     std::vector<double> C;
     std::vector<double> D;
+
     matrix_matrix_multi(A,B,C,n,n,n,n);
-    for(int ii = 0; ii < n; ii++){
-        for(int jj = 0; jj < n; jj++){
-            D[ii*n+jj] = C[ii*n+jj] - I_n[ii*n+jj];         
+    matrix_matrix_multi(B,A,D,n,n,n,n);
+
+    std::cout << "Matrix AB: \n";
+    print_matrix(C, n, n);
+    std::cout << "Matrix BA: \n";
+    print_matrix(D, n, n);
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            double diff1 = std::abs(C[i*n + j] - I_n[i*n + j]);
+            double diff2 = std::abs(D[i*n + j] - I_n[i*n + j]);
+            if (diff1 > epsilon || diff2 > epsilon) {
+                std::cout << "Matrices are not inverses (failed at element [" 
+                          << i << "," << j << "] with differences " 
+                          << diff1 << " and " << diff2 << ")\n";
+                return false;
+            }
         }
     }
-    for(int ii = 0; ii < n; ii++){
-        for(int jj = 0; jj < n; jj++){
-            if (D[ii*n+jj] > epsilon or D[ii*n+jj] < -epsilon){
-            return false;
-        }
-    }
-    }
+
+    std::cout << "Matrices are inverses within epsilon = " << epsilon << "\n";
     return true;
 }
 
@@ -173,5 +183,34 @@ bool idempotent_matrix(const std::vector<double> & M, int nrows, int ncols, std:
 
     std::cout << "Matrix is idempotent to power " << p 
               << " within epsilon = " << epsilon << "\n";
+    return true;
+}
+
+bool matrix_commute(const std::vector<double> & A, const std::vector<double> & B,
+                    int Arows, int Acols, int Brows, int Bcols, double epsilon){
+    std::vector<double> C;
+    std::vector<double> D;
+
+    matrix_matrix_multi(A,B,C,Arows,Acols,Brows,Bcols);
+    matrix_matrix_multi(B,A,D,Brows,Bcols,Arows,Acols);
+
+    std::cout << "Matrix AB: \n";
+    print_matrix(C, Arows, Bcols);
+    std::cout << "Matrix BA: \n";
+    print_matrix(D, Brows, Acols);
+
+    for (int i = 0; i < Arows; ++i) {
+        for (int j = 0; j < Bcols; ++j) {
+            double diff = std::abs(C[i*Arows + j] - D[i*Brows + j]);
+            if (diff > epsilon) {
+                std::cout << "Matrices are not commutative (failed at element [" 
+                          << i << "," << j << "] with difference " 
+                          << diff << ")\n";
+                return false;
+            }
+        }
+    }
+
+    std::cout << "Matrices are commutative within epsilon = " << epsilon << "\n";
     return true;
 }

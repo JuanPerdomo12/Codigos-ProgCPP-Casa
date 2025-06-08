@@ -249,3 +249,110 @@ bool orthogonal_matrix(const std::vector<double> & M, int nrows, int ncols,
     std::cout << "Matrix is orthogonal within epsilon = " << epsilon << "\n";
     return true;
 }
+
+void print_complex_matrix(const std::vector<std::complex<double>> & C, int nrows, int ncols) {
+    for (int ii = 0; ii < nrows; ++ii) {
+        for (int jj = 0; jj < ncols; ++jj) {
+            std::cout << C[ii*ncols + jj] << " ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+}
+
+void conjugate_transpose(const std::vector<std::complex<double>> & C, int nrows, int ncols, std::vector<std::complex<double>> & CCT) {
+    CCT.resize(ncols * nrows);
+
+    for (int i = 0; i < nrows; ++i) {
+        for (int j = 0; j < ncols; ++j) {
+            CCT[j*nrows + i] = std::conj(C[i*ncols + j]);
+        }
+    }
+}
+
+bool unitary_matrix(const std::vector<std::complex<double>> & C, int nrows, int ncols, double epsilon) {
+    std::vector<std::complex<double>> CCT;
+    conjugate_transpose(C, nrows, ncols, CCT);
+
+    std::cout << "Conjugate Transpose CCT: \n";
+    print_complex_matrix(CCT, nrows, ncols);
+
+    std::vector<std::complex<double>> C_CCT;
+    complex_matrix_matrix_multi(C, CCT, C_CCT, nrows, ncols, nrows, ncols);
+    
+    std::cout << "Matrix multi with Conjugate Transpose: \n";
+    print_complex_matrix(C_CCT, nrows, ncols);
+
+    std::vector<std::complex<double>> CI_n;
+    complex_identity_matrix(CI_n, nrows);
+
+    for (int i = 0; i < nrows; ++i) {
+        for (int j = 0; j < ncols; ++j) {
+            double diff = std::abs(C_CCT[i*nrows + j] - CI_n[i*nrows + j]);
+            if (diff > epsilon) {
+                std::cout << "Matrix is not unitary (failed at [" 
+                          << i << "," << j << "] with difference " << diff << ")\n";
+                return false;
+            }
+        }
+    }
+    std::cout << "Matrix is unitary within epsilon = " << epsilon << "\n";
+    return true;
+}
+
+bool hermitian_matrix(const std::vector<std::complex<double>> & C, int nrows, int ncols, double epsilon) {
+    std::vector<std::complex<double>> CCT;
+    conjugate_transpose(C, nrows, ncols, CCT);
+
+    std::cout << "Conjugate Transpose CCT: \n";
+    print_complex_matrix(CCT, nrows, ncols);
+
+    for (int i = 0; i < nrows; ++i) {
+        for (int j = 0; j < ncols; ++j) {
+            double diff = std::abs(C[i*nrows + j] - CCT[i*nrows + j]);
+            if (diff > epsilon) {
+                std::cout << "Matrix is not Hermitian (failed at [" 
+                          << i << "," << j << "] with difference " << diff << ")\n";
+                return false;
+            }
+        }
+    }
+    std::cout << "Matrix is hermitian within epsilon = " << epsilon << "\n";
+    return true;
+}
+
+void fill_complex_matrix(std::vector<std::complex<double>> & cdata, int m, int n, const int seed) {
+    std::mt19937 gen(seed);
+    std::uniform_real_distribution<double> dis(-1.0, 1.0);
+
+    cdata.resize(m * n);
+    for (int ii = 0; ii < m; ++ii) {
+        for (int jj = 0; jj < n; ++jj) {
+            cdata[ii * n + jj] = std::complex<double>(dis(gen), dis(gen));
+        }
+    }
+}
+
+void complex_matrix_matrix_multi(const std::vector<std::complex<double>> & C1, const std::vector<std::complex<double>> & C2, 
+            std::vector<std::complex<double>> & C_CCT, int C1rows, int C1cols, int C2rows, int C2cols){
+    if (C1cols != C2rows){
+        std::cerr << "Matrix 1 must have the same columns as rows of Matrix 2\n";
+        return ;
+    }
+
+    C_CCT.assign(C1rows*C2cols, 0.0);
+
+    for (int i = 0; i < C1rows; i++){
+        for (int j = 0; j < C2cols; j++){
+            for (int k = 0; k < C1cols; k++){
+                C_CCT[i*C2cols + j] += C1[i*C1cols + k] * C2[k*C2cols + j];
+            }
+        }
+    }
+}
+void complex_identity_matrix(std::vector<std::complex<double>> & I, int nrows) {
+    I.resize(nrows * nrows, std::complex<double>(0.0, 0.0));
+    for (int i = 0; i < nrows; ++i) {
+        I[i * nrows + i] = std::complex<double>(1.0, 0.0);
+    }
+}

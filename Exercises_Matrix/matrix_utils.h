@@ -3,6 +3,9 @@
 #include <vector>
 #include <cassert>
 #include <random>
+#include <complex>
+#include <cmath>
+#include <iomanip>
 
 void print_matrix(const std::vector<double> & M, int nrows, int ncols);
 void fill_matrix_random(std::vector<double> & M, const int nrows, const int ncols, const int seed);
@@ -23,3 +26,14 @@ bool matrix_commute(const std::vector<double> & A, const std::vector<double> & B
                     int Arows, int Acols, int Brows, int Bcols, double epsilon);
 bool orthogonal_matrix(const std::vector<double> & M, int nrows, int ncols,
                     double epsilon);
+void print_complex_matrix(const std::vector<std::complex<double>> & C, int nrows, int ncols);
+void conjugate_transpose(const std::vector<std::complex<double>> & C, int nrows, int ncols,
+                          std::vector<std::complex<double>> & CCT);
+bool unitary_matrix(const std::vector<std::complex<double>> & C, int nrows, int ncols,
+                          double epsilon);
+bool hermitian_matrix(const std::vector<std::complex<double>> & C, int nrows, int ncols,
+                          double epsilon);
+void fill_complex_matrix(std::vector<std::complex<double>> & cdata, int m, int n, const int seed);
+void complex_matrix_matrix_multi(const std::vector<std::complex<double>> & C1, const std::vector<std::complex<double>> & C2, 
+            std::vector<std::complex<double>> & C_CCT, int C1rows, int C1cols, int C2rows, int C2cols);
+void complex_identity_matrix(std::vector<std::complex<double>> & I, int nrows);

@@ -356,3 +356,105 @@ void complex_identity_matrix(std::vector<std::complex<double>> & I, int nrows) {
         I[i * nrows + i] = std::complex<double>(1.0, 0.0);
     }
 }
+
+void pauli_vector_matrix(double v1, double v2, double v3, std::vector<std::complex<double>> & P, const char smg) {
+    P.resize(4);
+    P[0] = std::complex<double>(v3, 0.0);
+    P[1] = std::complex<double>(v1, -1.0 * v2); 
+    P[2] = std::complex<double>(v1, 1.0 * v2); 
+    P[3] = std::complex<double>(-v3, 0.0);
+
+    std::cout << "Pauli vector matrix " << smg << ": \n";
+    print_complex_matrix(P, 2, 2);
+}
+
+bool pauli_commutation(double epsilon) {
+    std::vector<std::complex<double>> sigma_x;
+    std::vector<std::complex<double>> sigma_y;
+    std::vector<std::complex<double>> sigma_z;
+
+    char x = 'x';
+    char y = 'y';
+    char z = 'z';
+
+    pauli_vector_matrix(1.0, 0.0, 0.0, sigma_x, x); 
+    pauli_vector_matrix(0.0, 1.0, 0.0, sigma_y, y); 
+    pauli_vector_matrix(0.0, 0.0, 1.0, sigma_z, z); 
+
+    std::vector<std::complex<double>> xy;
+    std::vector<std::complex<double>> yx;
+    complex_matrix_matrix_multi(sigma_x, sigma_y, xy, 2, 2, 2, 2);
+    complex_matrix_matrix_multi(sigma_y, sigma_x, yx, 2, 2, 2, 2);
+    
+    std::vector<std::complex<double>> commu_xy(4);
+    for(int i = 0; i < 4; ++i) {
+        commu_xy[i] = xy[i] - yx[i];
+    }
+    
+    std::vector<std::complex<double>> twoi_sigma_z = sigma_z;
+    for(auto& val : twoi_sigma_z) {
+        val *= std::complex<double>(0.0, 2.0);
+    }
+
+    bool xy_valid = true;
+    for(int i = 0; i < 4; ++i) {
+        if(std::abs(commu_xy[i] - twoi_sigma_z[i]) > epsilon) {
+            xy_valid = false;
+            break;
+        }
+    }
+
+    std::vector<std::complex<double>> yz;
+    std::vector<std::complex<double>> zy;
+    complex_matrix_matrix_multi(sigma_y, sigma_z, yz, 2, 2, 2, 2);
+    complex_matrix_matrix_multi(sigma_z, sigma_y, zy, 2, 2, 2, 2);
+    
+    std::vector<std::complex<double>> commu_yz(4);
+    for(int i = 0; i < 4; ++i) {
+        commu_yz[i] = yz[i] - zy[i];
+    }
+    
+    std::vector<std::complex<double>> twoi_sigma_x = sigma_x;
+    for(auto& val : twoi_sigma_x) {
+        val *= std::complex<double>(0.0, 2.0);
+    }
+
+    bool yz_valid = true;
+    for(int i = 0; i < 4; ++i) {
+        if(std::abs(commu_yz[i] - twoi_sigma_x[i]) > epsilon) {
+            yz_valid = false;
+            break;
+        }
+    }
+
+    std::vector<std::complex<double>> zx;
+    std::vector<std::complex<double>> xz;
+    complex_matrix_matrix_multi(sigma_z, sigma_x, zx, 2, 2, 2, 2);
+    complex_matrix_matrix_multi(sigma_x, sigma_z, xz, 2, 2, 2, 2);
+    
+    std::vector<std::complex<double>> commu_zx(4);
+    for(int i = 0; i < 4; ++i) {
+        commu_zx[i] = zx[i] - xz[i];
+    }
+    
+    std::vector<std::complex<double>> twoi_sigma_y = sigma_y;
+    for(auto& val : twoi_sigma_y) {
+        val *= std::complex<double>(0.0, 2.0);
+    }
+
+    bool zx_valid = true;
+    for(int i = 0; i < 4; ++i) {
+        if(std::abs(commu_zx[i] - twoi_sigma_y[i]) > epsilon) {
+            zx_valid = false;
+            break;
+        }
+    }
+
+    // Print results
+    std::cout << "\nCommutation Relation Results:\n";
+    std::cout << "[sigma_1, sigma_2] = 2isigma_3: " << (xy_valid ? "PASSED" : "FAILED") << "\n";
+    std::cout << "[sigma_2, sigma_3] = 2isigma_1: " << (yz_valid ? "PASSED" : "FAILED") << "\n";
+    std::cout << "[sigma_3, sigma_1] = 2isigma_2: " << (zx_valid ? "PASSED" : "FAILED") << "\n";
+
+    return xy_valid && yz_valid && zx_valid;
+}

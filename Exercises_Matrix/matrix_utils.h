@@ -37,3 +37,5 @@ void fill_complex_matrix(std::vector<std::complex<double>> & cdata, int m, int n
 void complex_matrix_matrix_multi(const std::vector<std::complex<double>> & C1, const std::vector<std::complex<double>> & C2, 
             std::vector<std::complex<double>> & C_CCT, int C1rows, int C1cols, int C2rows, int C2cols);
 void complex_identity_matrix(std::vector<std::complex<double>> & I, int nrows);
+void pauli_vector_matrix(double v1, double v2, double v3, std::vector<std::complex<double>> & P, const char smg);
+bool pauli_commutation(double epsilon);

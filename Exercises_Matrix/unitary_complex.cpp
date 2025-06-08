@@ -16,16 +16,16 @@ int main(int argc, char **argv) {
     const int seed = std::stoi(argv[4]);
 
     // create matrix 
-    //std::vector<std::complex<double>> C(nrows*ncols);
+    std::vector<std::complex<double>> C(nrows*ncols);
 
-    std::vector<std::complex<double>> C = {
+    /*std::vector<std::complex<double>> C = {
     {1.0, 0.0}, {0.0, 0.0},  
     {0.0, 0.0}, {1.0, 0.0}  
-};
+    };*/
 
 
     // fill matrix
-    //fill_complex_matrix(C, nrows, ncols, seed);
+    fill_complex_matrix(C, nrows, ncols, seed);
 
     // print matrix
     std::cout << "Matrix C: \n";

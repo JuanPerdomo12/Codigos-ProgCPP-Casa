@@ -6,6 +6,8 @@
 #include <complex>
 #include <cmath>
 #include <iomanip>
+#include <string>
+#include <sstream>
 
 void print_matrix(const std::vector<double> & M, int nrows, int ncols);
 void fill_matrix_random(std::vector<double> & M, const int nrows, const int ncols, const int seed);
@@ -39,3 +41,6 @@ void complex_matrix_matrix_multi(const std::vector<std::complex<double>> & C1, c
 void complex_identity_matrix(std::vector<std::complex<double>> & I, int nrows);
 void pauli_vector_matrix(double v1, double v2, double v3, std::vector<std::complex<double>> & P, const char smg);
 bool pauli_commutation(double epsilon);
+void vandermonde_matrix(std::vector<double>& V, int nrows);
+void matrix_polynomial(const std::vector<double> & A, const std::vector<double> & coeffs, std::vector<double> & result, int nrows, int ncols);
+

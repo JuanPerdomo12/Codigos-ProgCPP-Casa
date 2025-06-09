@@ -13,6 +13,7 @@ void print_matrix(const std::vector<double> & M, int nrows, int ncols){
     std::cout << "\n";
 }
 void fill_matrix_random(std::vector<double> & M, const int nrows, const int ncols, const int seed){
+    M.resize(nrows * ncols);
     std::mt19937 gen(seed);
     std::uniform_real_distribution<> dis(-1, 1);
     for (int ii = 0; ii < nrows; ii++){
@@ -457,4 +458,42 @@ bool pauli_commutation(double epsilon) {
     std::cout << "[sigma_3, sigma_1] = 2isigma_2: " << (zx_valid ? "PASSED" : "FAILED") << "\n";
 
     return xy_valid && yz_valid && zx_valid;
+}
+
+void vandermonde_matrix(std::vector<double>& V, int nrows) {
+    V.resize(nrows * nrows);
+    
+    for (int i = 0; i < nrows; ++i) {
+        double x = i + 1;
+        for (int j = 0; j < nrows; ++j) {
+            V[i * nrows + j] = pow(x, j);
+        }
+    }
+}
+
+void matrix_polynomial(const std::vector<double> & A, const std::vector<double> & coeffs, std::vector<double> & result, int nrows, int ncols) {
+    if (nrows != ncols) {
+        std::cerr << "Error: Matrix must be square for polynomial evaluation\n";
+        return;
+    }
+    
+    result.assign(nrows * ncols, 0.0);
+    
+    std::vector<double> temp(nrows * ncols, 0.0);
+    std::vector<double> power(nrows * ncols, 0.0);
+    
+    for (int i = 0; i < nrows; ++i) {
+        power[i * ncols + i] = 1.0;
+    }
+    
+    for (size_t k = 0; k < coeffs.size(); ++k) {
+        for (int i = 0; i < nrows * ncols; ++i) {
+            result[i] += coeffs[k] * power[i];
+        }
+        
+        if (k < coeffs.size() - 1) {
+            matrix_matrix_multi(power, A, temp, nrows, ncols, nrows, ncols);
+            power = temp;
+        }
+    }
 }

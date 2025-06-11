@@ -43,4 +43,5 @@ void pauli_vector_matrix(double v1, double v2, double v3, std::vector<std::compl
 bool pauli_commutation(double epsilon);
 void vandermonde_matrix(std::vector<double>& V, int nrows);
 void matrix_polynomial(const std::vector<double> & A, const std::vector<double> & coeffs, std::vector<double> & result, int nrows, int ncols);
-
+bool invert_matrix(std::vector<double>& A, std::vector<double>& A_inv, int n, double epsilon);
+bool invert_complex_matrix(const std::vector<std::complex<double>>& C, std::vector<std::complex<double>>& C_inv, int n, double epsilon);

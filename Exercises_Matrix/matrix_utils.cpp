@@ -497,3 +497,82 @@ void matrix_polynomial(const std::vector<double> & A, const std::vector<double> 
         }
     }
 }
+
+bool invert_matrix(std::vector<double>& A, std::vector<double>& A_inv, int n, double epsilon) {
+    A_inv.assign(n * n, 0.0);
+    std::vector<double> augmented(2 * n * n);
+
+    // Initialize augmented matrix [A | I]
+    for (int i = 0; i < n; ++i){
+        for (int j = 0; j < n; ++j){
+            augmented[i * 2 * n + j] = A[i * n + j];           // A
+            augmented[i * 2 * n + (j + n)] = (i == j) ? 1.0 : 0.0; // I
+        }
+    }
+
+    // Gauss-Jordan elimination
+    for (int i = 0; i < n; ++i){
+        double pivot = augmented[i * 2 * n + i];
+        if (std::abs(pivot) < epsilon) return false;
+
+        // Normalize the pivot row
+        for (int j = 0; j < 2 * n; ++j){
+            augmented[i * 2 * n + j] /= pivot;
+        }
+
+        // Eliminate other rows
+        for (int k = 0; k < n; ++k){
+            if (k == i) continue;
+            double factor = augmented[k * 2 * n + i];
+            for (int j = 0; j < 2 * n; ++j){
+                augmented[k * 2 * n + j] -= factor * augmented[i * 2 * n + j];
+            }
+        }
+    }
+
+    // Extract inverse matrix from augmented
+    for (int i = 0; i < n; ++i){
+        for (int j = 0; j < n; ++j){
+            A_inv[i * n + j] = augmented[i * 2 * n + (j + n)];
+        }
+    }
+
+    return true;
+}
+
+bool invert_complex_matrix(const std::vector<std::complex<double>>& C, std::vector<std::complex<double>>& C_inv, int n, double epsilon) {
+    C_inv.assign(n * n, std::complex<double>(0.0, 0.0));
+    std::vector<std::complex<double>> augmented(2 * n * n);
+
+    for (int i = 0; i < n; ++i){
+        for (int j = 0; j < n; ++j){
+            augmented[i * 2 * n + j] = C[i * n + j];
+            augmented[i * 2 * n + (j + n)] = (i == j) ? std::complex<double>(1.0, 0.0) : std::complex<double>(0.0, 0.0);
+        }
+    }
+
+    for (int i = 0; i < n; ++i){
+        std::complex<double> pivot = augmented[i * 2 * n + i];
+        if (std::abs(pivot) < epsilon) return false;
+
+        for (int j = 0; j < 2 * n; ++j){
+            augmented[i * 2 * n + j] /= pivot;
+        }
+
+        for (int k = 0; k < n; ++k){
+            if (k == i) continue;
+            std::complex<double> factor = augmented[k * 2 * n + i];
+            for (int j = 0; j < 2 * n; ++j){
+                augmented[k * 2 * n + j] -= factor * augmented[i * 2 * n + j];
+            }
+        }
+    }
+
+    for (int i = 0; i < n; ++i){
+        for (int j = 0; j < n; ++j){
+            C_inv[i * n + j] = augmented[i * 2 * n + (j + n)];
+        }
+    }
+
+    return true;
+}

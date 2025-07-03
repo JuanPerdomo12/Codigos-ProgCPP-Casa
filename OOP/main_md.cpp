@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
   // parameters
   std::map<std::string, double> p;
   p["T0"] = 0.0;
-  p["TF"] = 100.8767;
+  p["TF"] = 50.87;
   p["DT"] = 0.01;
   p["G"] = -9.81;
 
